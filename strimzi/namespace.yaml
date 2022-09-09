@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: strimzi-kafka-poc
+  labels:
+    name: strimzi-kafka
+    type: system

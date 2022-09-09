@@ -1,0 +1,40 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: redpanda-console
+  namespace: strimzi-kafka-poc
+spec:
+  url: https://packages.vectorized.io/public/console/helm/charts/
+  interval: 10m
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: redpanda-console
+spec:
+  releaseName: redpanda-console
+  interval: 1m
+  chart:
+    spec:
+      chart: console
+      version: "0.3.1"
+      sourceRef:
+        kind: HelmRepository
+        name: redpanda-console
+        namespace: strimzi-kafka-poc
+  values:
+
+    console:
+      config:
+        kafka:
+          brokers:
+            - strimzi-kafka-poc-minimal-ephemeral-kafka-bootstrap.strimzi-kafka-poc:9092
+          clientId: redpanda-console
+          sasl:
+            enabled: false
+            mechanism: SCRAM-SHA-256
+            username: console
+            password: password
+          tls:
+            enabled: false
